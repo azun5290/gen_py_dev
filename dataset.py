@@ -1,7 +1,7 @@
 import sys
 import re
 
-from csv_reader import read_csv, save_csv
+from file_handler import read_file, save_file
 
 class Dataset(object):
 	"""
@@ -14,7 +14,7 @@ class Dataset(object):
 	def read(self, input_file):
 		"""
 		"""
-		self.data = read_csv(input_file)
+		self.data = read_file(input_file)
 	
 	def reformat(self):
 		"""
@@ -36,7 +36,7 @@ class Dataset(object):
 	def save(self, output_file):
 		"""
 		"""
-		save_csv(output_file, self.data)
+		save_file(output_file, self.data)
 
 	def __str__(self):
 		"""
