@@ -1,19 +1,24 @@
 import sys
 import re
 
-from csv_reader import parse_csv
+from csv_reader import read_csv, save_csv
 
 class Dataset(object):
-
+	"""
+	Documentation
+	"""
 	def __init__(self):
 		self.data          = None
 		self.invalid_chars = re.compile(r'[\t\n\r\f\v\#]*')
 
 	def read(self, input_file):
-		self.data = parse_csv(input_file)
+		"""
+		"""
+		self.data = read_csv(input_file)
 	
 	def reformat(self):
-		
+		"""
+		"""
 		for name in self.data:
 
 			new_info = []
@@ -29,10 +34,13 @@ class Dataset(object):
 			self.data[name] = new_info
 
 	def save(self, output_file):
-		print("Store...")
+		"""
+		"""
+		save_csv(output_file, self.data)
 
 	def __str__(self):
-
+		"""
+		"""
 		string = ""
 		for name in self.data:
 			string += "{}\n".format(name)
@@ -41,4 +49,6 @@ class Dataset(object):
 		return string
 
 	def _clean_string(self, string):
+		"""
+		"""
 		return self.invalid_chars.sub('', string).strip()
