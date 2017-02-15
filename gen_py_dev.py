@@ -16,7 +16,7 @@ class GenPyDev(object):
 		dataset = Dataset()
 		dataset.read(self.input_file)
 		dataset.clean_field()
-		print(dataset)
+		dataset.find(0, "Corporate-Resource-DS BTSS")
 		dataset.save(self.output_file)
 
 

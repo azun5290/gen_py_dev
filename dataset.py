@@ -90,6 +90,36 @@ class Dataset(object):
 			
 		save_file(output_file, data)
 
+
+	def find(self, column, key):
+		"""
+		Allow to find and modify an existing element; `column` is the index of
+		the column where looking for, it can be also the name of the column if
+		the intestation exists. `key` is the string to match the element.
+
+		:param int/str column: the column of the dataset
+		:param str key: the key to looking for
+		"""
+		if isinstance(column, str):
+			column = self.intestation.index(column)
+		elif not isinstance(column, int):
+			raise ValueError("Not valid field.")
+
+		for index, element in enumerate(self.data):
+
+			if element[column] == key:
+				
+				for i, field in enumerate(element[:-1]):
+					new_value = input("{}: ".format(self.intestation[i]))
+					self.data[index][i] = new_value
+				
+				for info in element[-1]:
+					new_value = input("{}/{}: ".format(
+							self.intestation[-1], info
+					))
+					element[-1][info] = new_value
+					
+
 	def __str__(self):
 		"""
 		Print the dataset.
