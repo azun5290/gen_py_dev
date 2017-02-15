@@ -15,7 +15,8 @@ class GenPyDev(object):
 	def run(self):
 		dataset = Dataset()
 		dataset.read(self.input_file)
-		dataset.reformat()
+		dataset.clean_field()
+		print(dataset)
 		dataset.save(self.output_file)
 
 

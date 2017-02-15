@@ -1,15 +1,9 @@
 import sys
 import re
 
-from difflib import get_close_matches
+from difflib import get_close_matches, SequenceMatcher
 from file_handler import read_file, save_file
-
-class Info(object):
-	SHARE_NAME = 	'Share Owner Name'
-	SALARY_NO =		'Salary No'
-	DELEGATE_NAME =	'Delegate Owner Name'
-	DELEGATE_SALARY = 'Delegate Salary No'
-	DATA_CLASSIF =	'Data Classification'
+from valid_fields import valid_fields
 
 class Dataset(object):
 	"""
@@ -20,53 +14,87 @@ class Dataset(object):
 	def __init__(self):
 		self.data          = None
 		self.invalid_chars = re.compile(r'[\t\n\r\f\v\#]*')
-		self.valid_fields  = [
-			Info.SHARE_NAME,
-			Info.SALARY_NO,
-			Info.DELEGATE_NAME,
-			Info.DELEGATE_SALARY,
-			Info.DATA_CLASSIF
-		]
 
 	def read(self, input_file):
 		"""
-		"""
-		self.data = read_file(input_file)
-	
-	def reformat(self):
-		"""
-		"""
-		for name in self.data:
+		Import the dataset from file.
 
-			new_info = []
-			for info in self.data[name]:
+		:param string filename: the name of the file.
+		"""
+		data = read_file(input_file)
+
+		self.data = []
+		for element in data:
 			
-				valid_info = get_close_matches(info[0], self.valid_fields, n=1)
-				
-				if valid_info:
-					try:
-						valid_value = self._clean_string(info[1])
-					except IndexError:
-						valid_value = ""
+			info = [x.split(':') for x in element[-1].split('\n')]
+			file_fields = [row[0] for row in info]
+			d = dict()
 
-					new_info.append([valid_info[0], valid_value])
-					
-			self.data[name] = new_info
+			for valid_field in valid_fields:
+				try:
+					new_field = get_close_matches(valid_field, file_fields, n=1,
+							cutoff=0.7)
+					index = file_fields.index(new_field[0])
+					value = info[index][1]
+				except:
+					value = ""
+			
+				d[valid_field] = value
 
-
-	def save(self, output_file):
+			self.data.append([ *element[:-1], d])
+	
+	def clean_field(self):
 		"""
+		Clean the string by removing the unnecessary string.
 		"""
-		save_file(output_file, self.data)
+		for element in self.data:
+			
+			info_field = element[-1]
+
+			for key in info_field.keys():
+				info_field[key] = self._clean_string(info_field[key])
+
+
+	def save(self, output_file, blank=None):
+		"""
+		Write the dataset to specific file.
+
+		:param string filename: the name of the file.
+		"""
+
+		data = []
+
+		blank_str = " BLANK" if blank else ""
+
+		for element in self.data:
+			
+			field_values = [
+				" {}".format(value) if value else blank_str
+				for value in element[-1].values()
+			]
+
+			field_names = list(element[-1].keys())
+
+			info_str = '\n'.join([
+				"{}:{}".format(field_names[i], field_values[i])
+				for i in range(len(field_names))
+			])
+
+			data.append([ *element[:-1], info_str])
+
+			
+		save_file(output_file, data)
 
 	def __str__(self):
 		"""
+		Print the dataset.
 		"""
 		string = ""
-		for name in self.data:
-			string += "{}\n".format(name)
-			for info in self.data[name]:
-				string += "\t{}\n".format(' '.join(info))
+		for element in self.data:
+			for field in element[:-1]:
+				string += "{}\n".format(field)
+			for field in element[-1]:
+				string += "\t{}: {}\n".format(field, element[-1][field])
 		return string
 
 	def _clean_string(self, string):
