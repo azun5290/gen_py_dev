@@ -1,7 +1,7 @@
 from openpyxl import load_workbook, Workbook
 
 
-def read_xlsx(filename, intestation=True):
+def read_xlsx(filename, read_intestation=True):
 	"""
 	Return a list of the elements in the xlsx file. Each element is stored in a
 	list that contains the fields of the element.
@@ -17,12 +17,17 @@ def read_xlsx(filename, intestation=True):
 	main_sheet_name = wb.get_sheet_names()[0]
 	main_sheet = wb.get_sheet_by_name(main_sheet_name)
 
-	minimum_row = 2 if intestation else 1
 
-	for row in main_sheet.iter_rows(min_row=minimum_row):
-		data.append([cell.value for cell in row])
+	for index_row, row in enumerate(main_sheet.iter_rows()):
 
-	return data
+		row_list = [cell.value for cell in row]
+
+		if read_intestation and index_row == 0:
+			intestation = row_list
+		else:	
+			data.append(row_list)
+
+	return data, intestation
 
 def save_xlsx(filename, data, intestation=None):
 	"""

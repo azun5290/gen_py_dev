@@ -14,6 +14,11 @@ class Dataset(object):
 	def __init__(self):
 		self.data          = None
 		self.invalid_chars = re.compile(r'[\t\n\r\f\v\#]*')
+		self.intestation = [
+			"name",
+			"desc",
+			"info"
+		]
 
 	def read(self, input_file):
 		"""
@@ -21,7 +26,7 @@ class Dataset(object):
 
 		:param string filename: the name of the file.
 		"""
-		data = read_file(input_file)
+		data, self.intestation = read_file(input_file)
 
 		self.data = []
 		for element in data:

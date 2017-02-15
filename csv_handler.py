@@ -1,6 +1,6 @@
 import csv
 
-def read_csv(filename, intestation=True):
+def read_csv(filename, read_intestation=True):
 	"""
 	Return a list of the elements in the csv file. Each element is stored in a
 	list that contains the fields of the element.
@@ -15,14 +15,13 @@ def read_csv(filename, intestation=True):
 	with open(filename, 'r') as csvfile:
 		reader = csv.reader(csvfile, delimiter=',')
 
-		if intestation:
-			next(reader)
+		if read_intestation:
+			intestation = next(reader)
 
 		for element in reader:
 			data.append(element)
-			#data[name] = [x.split(':') for x in info.split('\n') if x]
 
-	return data
+	return data, intestation
 
 def save_csv(filename, data, intestation=None):
 	"""
