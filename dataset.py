@@ -91,6 +91,24 @@ class Dataset(object):
 		save_file(output_file, data)
 
 
+	def ad(self):
+		"""
+		Add the user to active directory.
+		WARNING: TESTING FUNCTION
+		"""
+
+		#pyad.set_defaults(
+		#	ldap_server = server,
+		#	username	= username,
+		#	password	= password
+		#)
+		group = pyad.from_dn("group_name")
+		
+		for element in self.data:
+			new_user = pyad.ADUser.create()
+			new_user.set_attributes()
+			group.add_members(new_user)
+
 	def find(self, column, key):
 		"""
 		Allow to find and modify an existing element; `column` is the index of
