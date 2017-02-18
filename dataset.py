@@ -46,7 +46,7 @@ class Dataset(object):
 			
 				d[valid_field] = value
 
-			self.data.append([ *element[:-1], d])
+			self.data.append(element[:-1] + [d])
 	
 	def clean_field(self):
 		"""
@@ -85,7 +85,7 @@ class Dataset(object):
 				for i in range(len(field_names))
 			])
 
-			data.append([ *element[:-1], info_str])
+			data.append(element[:-1] + [info_str])
 
 			
 		save_file(output_file, data)
