@@ -10,7 +10,6 @@ class Dataset(object):
 	Documentation
 
 	"""
-
 	def __init__(self):
 		self.data          = None
 		self.invalid_chars = re.compile(r'[\t\n\r\f\v\#]*')
@@ -72,13 +71,15 @@ class Dataset(object):
 		blank_str = " BLANK" if blank else ""
 
 		for element in self.data:
-			
+		
+			values = [element[-1][val] for val in valid_fields]
+
 			field_values = [
 				" {}".format(value) if value else blank_str
-				for value in element[-1].values()
+				for value in values
 			]
 
-			field_names = list(element[-1].keys())
+			field_names = valid_fields
 
 			info_str = '\n'.join([
 				"{}:{}".format(field_names[i], field_values[i])
