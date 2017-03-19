@@ -3,5 +3,5 @@ valid_fields = [
 	"Salary No",
 	"Delegate Owner Name",
 	"Delegate Salary No",
-	"Data Classification" 
+	"Data Classification"
 ]
