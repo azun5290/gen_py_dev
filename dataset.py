@@ -13,19 +13,15 @@ class Dataset(object):
 	def __init__(self):
 		self.data          = None
 		self.invalid_chars = re.compile(r'[\t\n\r\f\v\#]*')
-		self.intestation = [
-			"name",
-			"desc",
-			"info"
-		]
+		self.intestation   = None
 
-	def read(self, input_file):
+	def read(self, input_file, read_intestation=False):
 		"""
 		Import the dataset from file.
 
 		:param string filename: the name of the file.
 		"""
-		data, self.intestation = read_file(input_file)
+		data, self.intestation = read_file(input_file, read_intestation)
 
 		self.data = []
 		for element in data:
@@ -59,7 +55,7 @@ class Dataset(object):
 				info_field[key] = self._clean_string(info_field[key])
 
 
-	def save(self, output_file, blank=None):
+	def save(self, output_file, blank=None, write_intestation=False):
 		"""
 		Write the dataset to specific file.
 
@@ -88,8 +84,17 @@ class Dataset(object):
 
 			data.append(element[:-1] + [info_str])
 
+		# Build the intestation if it was not parsed from the input file
+		if write_intestation and self.intestation is None:
+			self.intestation = [
+				'field'+str(i) for i in range(len(self.data[0]))
+			]
+	
+		if write_intestation:
+			save_file(output_file, data, self.intestation)
+		else:
+			save_file(output_file, data)
 			
-		save_file(output_file, data)
 
 
 	def ad(self):
