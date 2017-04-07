@@ -12,6 +12,7 @@ def read_csv(filename, read_intestation=True):
 	:rtype: list(list)
 	"""
 	data = []
+	intestation = None
 
 	with open(filename, 'r') as csvfile:
 		reader = csv.reader(csvfile, delimiter=',')
@@ -39,7 +40,7 @@ def save_csv(filename, data, intestation=None):
 		writer = csv.writer(csvfile, delimiter=',')
 
 		if intestation:
-			writer.writerow[instestation]
+			writer.writerow(intestation)
 
 		for name in data:
 			writer.writerow(name)
